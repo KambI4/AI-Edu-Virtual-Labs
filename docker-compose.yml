@@ -1,0 +1,41 @@
+# Запуск с PostgreSQL и резервным копированием по расписанию: docker compose up -d → http://localhost:8000
+services:
+  db:
+    image: postgres:17-alpine   # та же версия, что у pg_dump в образе тренажёра
+    environment:
+      POSTGRES_DB: aiedu
+      POSTGRES_USER: aiedu
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-aiedu}
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aiedu"]
+      interval: 5s
+      retries: 10
+
+  web:
+    build: .
+    env_file: [{path: backend/.env, required: false}]
+    environment: &env
+      DATABASE_NAME: aiedu
+      DATABASE_USER: aiedu
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-aiedu}
+      DATABASE_HOST: db
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1}
+      VIRTUAL_LABS_BACKUP_DIR: /app/backend/backups
+    ports: ["8000:8000"]
+    volumes: [media:/app/backend/media, backups:/app/backend/backups]
+    depends_on: {db: {condition: service_healthy}}
+
+  # Резервная копия базы раз в сутки (ТЗ, п. 38); хранятся последние VIRTUAL_LABS_BACKUP_KEEP копий
+  backup:
+    build: .
+    command: sh -c "sleep 60 && python manage.py vl_backup --every-hours 24"
+    env_file: [{path: backend/.env, required: false}]
+    environment: *env
+    volumes: [backups:/app/backend/backups]
+    depends_on: {db: {condition: service_healthy}}
+
+volumes:
+  pgdata:
+  media:
+  backups:

@@ -1,0 +1,6 @@
+# Автономный запуск тренажёра (версии совпадают с backend AI edu там, где библиотека общая)
+-r apps/virtual_labs/requirements.txt
+Django==5.2.16
+djangorestframework==3.18.1
+psycopg[binary]==3.2.9
+gunicorn==23.0.0
