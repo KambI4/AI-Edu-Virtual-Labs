@@ -92,7 +92,7 @@ button.vl-chip { cursor: pointer; }
 .vl-work-card:hover { transform: translateY(-2px); border-color: #b9c6ef; }
 .vl-work-card h3 { margin: 0; font-size: 1.05rem; line-height: 1.35; }
 .vl-work-card p { margin: 0; font-size: .86rem; color: var(--vl-muted); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-.vl-work-icon { display: grid !important; place-items: center; width: 48px; height: 48px; min-height: 0 !important; padding: 0 !important; border-radius: 13px; flex: none; }
+.catalog-card-art.vl-work-icon { display: grid !important; place-items: center; align-items: center; justify-content: center; width: 48px; height: 48px; min-height: 0 !important; padding: 0 !important; border-radius: 13px; flex: none; }
 .vl-course { margin-top: 34px; }
 .vl-course-head { margin-bottom: 14px; }
 .vl-course-head h2 { margin: 0; }
